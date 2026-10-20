@@ -1,0 +1,23 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brnac-app
+  labels:
+    app: brnac
+    tier: front-end
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: brnac
+      tier: front-end
+  template:
+    metadata:
+      labels:
+        app: brnac
+        tier: front-end
+    spec:
+      containers:
+        - name: nginx
+          image: nginx

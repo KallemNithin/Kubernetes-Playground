@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: Quota-allocation
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    request.cpu: "5"
+    request.memory: 15Gi
+    limits.cpu: "20"
+    limits.memory: 125Gi
