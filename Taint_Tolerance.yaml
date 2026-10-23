@@ -1,0 +1,15 @@
+#kubectl taint nodes worker-1 team=dev:NoSchedule
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: app
+spec:
+  containers:
+  - name: app
+    image: nginx
+  tolerations:
+  - key: "team"
+    operator: "Equal"
+    value: "dev"
+    effect: "NoScheduler"
