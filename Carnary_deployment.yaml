@@ -1,0 +1,63 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-stable
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: myapp
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: myapp
+        track: stable
+    spec:
+      containers:
+        - name: myapp
+          image: nginx:1.28
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: myapp
+        track: canary
+    spec:
+      containers:
+        - name: myapp
+          image: nginx:1.29
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp
+  ports:
+    - port: 80
+      targetPort: 80
+---
+#Important: The Service selector intentionally excludes track. This allows it to select Pods from both Deployments. Kubernetes uses label selectors to determine which Pods receive Service traffic.
+#Gradually increase traffic to Caranary
+#kubectl scale deployment myapp-stable --replicas=7
+#kubectl scale deployment myapp-canary --replicas=3
